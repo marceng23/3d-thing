@@ -1,4 +1,4 @@
-v #include <math.h>
+#include <math.h>
 #include <stdio.h>
 #include <GL/glut.h> 
 
@@ -7,12 +7,13 @@ v #include <math.h>
 #define SH         120*res                  //screen height
 #define SW2        (SW/2)                   //half of screen width
 #define SH2        (SH/2)                   //half of screen height
-#define pixelScale 4/res                    //OpenGL pixel scaled
+#define pixelScale 4/res                    //OpenGL pixel scale
 #define GLSW       (SW*pixelScale)          //OpenGL window width
 #define GLSH       (SH*pixelScale)          //OpenGL window height
-<<<<<<< HEAD
-//#define numSect  4                          //number of sectors
-//#define numWall 16
+#define numSect  4                          //number of sectors
+#define numWall 16                          //number of walls
+
+
 
 //textures
 #include "textures/T_NUMBERS.h"
@@ -37,15 +38,12 @@ v #include <math.h>
 #include "textures/T_17.h"
 #include "textures/T_18.h"
 #include "textures/T_19.h"
-int numText=19;                          //number of textures
-int numSect= 0;                          //number of sectors
-int numWall= 0;                          //number of wallss
 
 
-=======
-#define numSect  4                          //number of sectors
-#define numWall 16                          //number of walls
->>>>>>> ad800fe019095989aebf0514feb9dbf156fd12d7
+int numText = 19;                          //number of textures
+int numSect = 0;                          //number of sectors
+int numWall = 0;                          //number of wallss
+
 //------------------------------------------------------------------------------
 typedef struct 
 {
@@ -77,13 +75,9 @@ typedef struct
  int x1,y1;             //bottom line point 1
  int x2,y2;             //bottom line point 2
  int c;                 //wall color
-<<<<<<< HEAD
- int wt,u,v;            //wall texture and u/v tile
- int shade;   
+ int wt, u, v;            //wall texture and u/v tile
+ int shade;
 }walls; walls W[256];
-=======
-}walls; walls W[30];
->>>>>>> ad800fe019095989aebf0514feb9dbf156fd12d7
 
 typedef struct 
 {
@@ -91,8 +85,7 @@ typedef struct
  int z1,z2;             //height of bottom and top 
  int d;                 //add y distances to sort drawing order
  int c1,c2;             //bottom and top color
-<<<<<<< HEAD
- int st,ss;             //surface texture, surface scale 
+ int st, ss;             //surface texture, surface scale 
  int surf[SW];          //to hold points for surfaces
  int surface;           //is there a surfaces to draw
 }sectors; sectors S[128];
@@ -103,50 +96,40 @@ typedef struct
  const unsigned char *name;           //texture name
 }TexureMaps; TexureMaps Textures[64]; //increase for more textures
 
-
 //------------------------------------------------------------------------------
 
 void load()
 {
- FILE *fp = fopen("level.h","r");
- if(fp == NULL){ printf("Error opening level.h"); return;}
- int s,w;
+    FILE* fp = fopen("level.h", "r");
+    if (fp == NULL) { printf("Error opening level.h"); return; }
+    int s, w;
 
- fscanf(fp,"%i",&numSect);   //number of sectors 
- for(s=0;s<numSect;s++)      //load all sectors
- {
-  fscanf(fp,"%i",&S[s].ws);  
-  fscanf(fp,"%i",&S[s].we); 
-  fscanf(fp,"%i",&S[s].z1);  
-  fscanf(fp,"%i",&S[s].z2); 
-  fscanf(fp,"%i",&S[s].st); 
-  fscanf(fp,"%i",&S[s].ss);  
- }
- fscanf(fp,"%i",&numWall);   //number of walls 
- for(s=0;s<numWall;s++)      //load all walls
- {
-  fscanf(fp,"%i",&W[s].x1);  
-  fscanf(fp,"%i",&W[s].y1); 
-  fscanf(fp,"%i",&W[s].x2);  
-  fscanf(fp,"%i",&W[s].y2); 
-  fscanf(fp,"%i",&W[s].wt);
-  fscanf(fp,"%i",&W[s].u); 
-  fscanf(fp,"%i",&W[s].v);  
-  fscanf(fp,"%i",&W[s].shade);  
- }
- fscanf(fp,"%i %i %i %i %i",&P.x,&P.y,&P.z, &P.a,&P.l); //player position, angle, look direction 
- fclose(fp); 
+    fscanf(fp, "%i", &numSect);   //number of sectors 
+    for (s = 0; s < numSect; s++)      //load all sectors
+    {
+        fscanf(fp, "%i", &S[s].ws);
+        fscanf(fp, "%i", &S[s].we);
+        fscanf(fp, "%i", &S[s].z1);
+        fscanf(fp, "%i", &S[s].z2);
+        fscanf(fp, "%i", &S[s].st);
+        fscanf(fp, "%i", &S[s].ss);
+    }
+    fscanf(fp, "%i", &numWall);   //number of walls 
+    for (s = 0; s < numWall; s++)      //load all walls
+    {
+        fscanf(fp, "%i", &W[s].x1);
+        fscanf(fp, "%i", &W[s].y1);
+        fscanf(fp, "%i", &W[s].x2);
+        fscanf(fp, "%i", &W[s].y2);
+        fscanf(fp, "%i", &W[s].wt);
+        fscanf(fp, "%i", &W[s].u);
+        fscanf(fp, "%i", &W[s].v);
+        fscanf(fp, "%i", &W[s].shade);
+    }
+    fscanf(fp, "%i %i %i %i %i", &P.x, &P.y, &P.z, &P.a, &P.l); //player position, angle, look direction 
+    fclose(fp);
 }
 
-
-=======
- int surf[SW];          //to hold points for surfaces
- int surface;           //is there a surfaces to draw
-}sectors; sectors S[30];
-
-//------------------------------------------------------------------------------
-
->>>>>>> ad800fe019095989aebf0514feb9dbf156fd12d7
 void pixel(int x,int y, int c)                  //draw a pixel at x/y with rgb
 {int rgb[3];
  if(c==0){ rgb[0]=255; rgb[1]=255; rgb[2]=  0;} //Yellow	
@@ -282,10 +265,10 @@ void draw3D()
     wy[3]=wy[1]; 
     S[s].d+=dist(0,0, (wx[0]+wx[1])/2, (wy[0]+wy[1])/2 );  //store this wall distance
     //world z height
-    wz[0]=S[s].z1-P.z+((P.l*wy[0])/32.0);
-    wz[1]=S[s].z1-P.z+((P.l*wy[1])/32.0);
-    wz[2]=S[s].z2-P.z+((P.l*wy[0])/32.0);
-    wz[3]=S[s].z2-P.z+((P.l*wy[1])/32.0);
+    wz[0] = S[s].z1 - P.z + ((P.l * wy[0]) / 32.0);
+    wz[1] = S[s].z1 - P.z + ((P.l * wy[1]) / 32.0);
+    wz[2] = S[s].z2 - P.z + ((P.l * wy[0]) / 32.0);
+    wz[3] = S[s].z2 - P.z + ((P.l * wy[1]) / 32.0);
     //dont draw if behind player
     if(wy[0]<1 && wy[1]<1){ continue;}      //wall behind player, dont draw
     //point 1 behind player, clip
@@ -333,15 +316,14 @@ void display()
 
 void KeysDown(unsigned char key,int x,int y)   
 { 
-<<<<<<< HEAD
- if(key=='w'){ K.w =1;} 
- if(key=='s'){ K.s =1;} 
- if(key=='a'){ K.a =1;} 
- if(key=='d'){ K.d =1;} 
- if(key=='m'){ K.m =1;} 
- if(key==','){ K.sr=1;} 
- if(key=='.'){ K.sl=1;}
- if(key== 13){ load();} //enter key load level
+  if (key == 'w') { K.w = 1; }
+  if (key == 's') { K.s = 1; }
+  if (key == 'a') { K.a = 1; }
+  if (key == 'd') { K.d = 1; }
+  if (key == 'm') { K.m = 1; }
+  if (key == ',') { K.sr = 1; }
+  if (key == '.') { K.sl = 1; }
+  if (key == 13) { load(); } //enter key load level
 }
 void KeysUp(unsigned char key,int x,int y)
 { 
@@ -352,27 +334,6 @@ void KeysUp(unsigned char key,int x,int y)
  if(key=='m'){ K.m =0;}
  if(key==','){ K.sr=0;} 
  if(key=='.'){ K.sl=0;}
-}
-
-
-=======
- if(key=='w'==1){ K.w =1;} 
- if(key=='s'==1){ K.s =1;} 
- if(key=='a'==1){ K.a =1;} 
- if(key=='d'==1){ K.d =1;} 
- if(key=='m'==1){ K.m =1;} 
- if(key==','==1){ K.sr=1;} 
- if(key=='.'==1){ K.sl=1;} 
-}
-void KeysUp(unsigned char key,int x,int y)
-{ 
- if(key=='w'==1){ K.w =0;}
- if(key=='s'==1){ K.s =0;}
- if(key=='a'==1){ K.a =0;}
- if(key=='d'==1){ K.d =0;}
- if(key=='m'==1){ K.m =0;}
- if(key==','==1){ K.sr=0;} 
- if(key=='.'==1){ K.sl=0;}
 }
 
 int loadSectors[]=
@@ -405,7 +366,6 @@ int loadWalls[]=
  32, 96,  0, 96, 6,
   0, 96,  0, 64, 7,
 };
->>>>>>> ad800fe019095989aebf0514feb9dbf156fd12d7
 
 void init()
 {int x;
@@ -417,8 +377,6 @@ void init()
  } 
  //init player
  P.x=70; P.y=-110; P.z=20; P.a=0; P.l=0;    //init player variables
-<<<<<<< HEAD
-=======
  //load sectors
  int s,w,v1=0,v2=0;
  for(s=0;s<numSect;s++)
@@ -440,7 +398,6 @@ void init()
    v2+=5;
   }
  }
->>>>>>> ad800fe019095989aebf0514feb9dbf156fd12d7
 
 }
 
@@ -460,4 +417,5 @@ int main(int argc, char* argv[])
  glutMainLoop();
  return 0;
 } 
+
 
