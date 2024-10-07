@@ -1,4 +1,4 @@
-#include <math.h>
+v #include <math.h>
 #include <stdio.h>
 #include <GL/glut.h> 
 
@@ -7,7 +7,7 @@
 #define SH         120*res                  //screen height
 #define SW2        (SW/2)                   //half of screen width
 #define SH2        (SH/2)                   //half of screen height
-#define pixelScale 4/res                    //OpenGL pixel scale
+#define pixelScale 4/res                    //OpenGL pixel scaled
 #define GLSW       (SW*pixelScale)          //OpenGL window width
 #define GLSH       (SH*pixelScale)          //OpenGL window height
 <<<<<<< HEAD
@@ -284,8 +284,8 @@ void draw3D()
     //world z height
     wz[0]=S[s].z1-P.z+((P.l*wy[0])/32.0);
     wz[1]=S[s].z1-P.z+((P.l*wy[1])/32.0);
-    wz[2]=wz[0]+S[s].z2;                       //top line has new z 
-    wz[3]=wz[1]+S[s].z2; 
+    wz[2]=S[s].z2-P.z+((P.l*wy[0])/32.0);
+    wz[3]=S[s].z2-P.z+((P.l*wy[1])/32.0);
     //dont draw if behind player
     if(wy[0]<1 && wy[1]<1){ continue;}      //wall behind player, dont draw
     //point 1 behind player, clip
